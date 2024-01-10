@@ -1,11 +1,19 @@
 import { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Camera } from 'expo-camera';
+
+import { Camera, CameraRecordingOptions } from 'expo-camera';
 import { Video } from 'expo-av';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 
+import VideoPlayer from './src/components/VideoPlayer';
+import CameraView from './src/components/CameraView';
+
 export default function App() {
+  const cameraRef = useRef<Camera>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [video, setVideo] = useState<any>(null);
+
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false);
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] =
@@ -33,21 +41,38 @@ export default function App() {
   }
 
   if (hasMediaLibraryPermission === false) {
-    return <Text>Não tem permissão de biblioteca</Text>; 
+    return <Text>Não tem permissão de biblioteca</Text>;
   }
 
+  const recordVideo = () => {
+    setIsRecording(true);
+    const options: CameraRecordingOptions = {
+      quality: '1080p',
+      maxDuration: 30,
+      mute: false,
+    };
+
+    if (cameraRef && cameraRef.current) {
+      cameraRef.current.recordAsync(options).then((recordedVideo: any) => {
+        setVideo(recordedVideo);
+        setIsRecording(false);
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    if (cameraRef && cameraRef.current) {
+      cameraRef.current.stopRecording();
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <CameraView
+      cameraRef={cameraRef}
+      isRecording={isRecording}
+      onRecord={recordVideo}
+      onStopRecording={stopRecording}
+    ></CameraView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
