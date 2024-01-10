@@ -68,14 +68,28 @@ export default function App() {
   };
 
   if (video) {
-    const shareVideo = () => {}
-    const saveVideo = () => {}
+    const saveVideo = () => {
+      MediaLibrary.saveToLibraryAsync(video.uri).then(() => {
+        setVideo(undefined);
+      });
+    };
+
+    const shareVideo = () => {
+      shareAsync(video.uri).then(() => {
+        setVideo(undefined);
+      });
+    };
+
+    const discardVideo = () => {
+      setVideo(undefined);
+    };
+
     return (
       <VideoPlayer
         video={video}
         onShare={shareVideo}
         onSave={saveVideo}
-        onDiscard={() => setVideo(undefined)}
+        onDiscard={discardVideo}
       />
     );
   }

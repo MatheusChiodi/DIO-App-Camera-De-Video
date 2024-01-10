@@ -13,8 +13,13 @@ export default function VideoPlayer({
   onDiscard,
 }: VideoPlayerProps) {
   return (
-    <SafeAreaView>
-      <Video style={styles.video} source={{ uri: video.uri }} useNativeControls isLooping />
+    <SafeAreaView style={styles.container}>
+      <Video
+        style={styles.video}
+        source={{ uri: video.uri }}
+        useNativeControls
+        isLooping
+      />
       <View style={styles.menuButtons}>
         <Button title="Share" onPress={onShare} />
         <Button title="Save" onPress={onSave} />
