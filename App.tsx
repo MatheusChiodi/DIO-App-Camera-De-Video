@@ -67,6 +67,19 @@ export default function App() {
     }
   };
 
+  if (video) {
+    const shareVideo = () => {}
+    const saveVideo = () => {}
+    return (
+      <VideoPlayer
+        video={video}
+        onShare={shareVideo}
+        onSave={saveVideo}
+        onDiscard={() => setVideo(undefined)}
+      />
+    );
+  }
+
   return (
     <CameraView
       cameraRef={cameraRef}
